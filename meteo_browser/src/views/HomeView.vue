@@ -7,14 +7,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, rowIndex) in jsonData" :key="rowIndex">
+        <tr v-for="(row, rowIndex) in jsonData.slice(1)" :key="rowIndex">
           <td v-for="(value, key) in row" :key="key">{{ value }}</td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
-
 
 <script>
 import * as XLSX from 'xlsx';
