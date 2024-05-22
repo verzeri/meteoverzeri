@@ -3,6 +3,9 @@
     <table>
       <thead>
         <tr>
+        <th colspan="1">Comuni</th>
+          <th colspan="16">TEMPERATURA MEDIA ANNUA (C°)</th>
+          <th colspan="16">PRECIPITAZIONE TOTALE ANNUA (mm)</th>
           <th v-for="(key, index) in jsonData[0]" :key="index">{{ key }}</th>
         </tr>
       </thead>
