@@ -3,7 +3,7 @@
     <table>
       <thead>
         <tr>
-        <th colspan="1">Comuni</th>
+          <th colspan="1">COMUNI</th>
           <th colspan="16">TEMPERATURA MEDIA ANNUA (C°)</th>
           <th colspan="16">PRECIPITAZIONE TOTALE ANNUA (mm)</th>
           <th v-for="(key, index) in jsonData[0]" :key="index">{{ key }}</th>
@@ -41,12 +41,12 @@ export default {
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
         let json = XLSX.utils.sheet_to_json(worksheet);
-       
+
         // Rimuovi intestazioni vuote
         json = json.filter(row => Object.values(row).some(cell => cell !== ''));
-       
+
         this.jsonData = json;
-       
+
         // Visualizza array di elementi nella console
         console.log('Array di elementi:', this.jsonData);
       } catch (error) {
@@ -61,17 +61,40 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
 }
 
 th, td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
+  text-align: center; /* Allineamento del testo delle celle */
+  transition: background-color 0.3s ease; /* Transizione per il cambio di sfondo */
 }
 
 th {
-  background-color: #f2f2f2;
-  text-align: left;
-  font-weight: bold;
+  background-color: #007BFF; /* Colore di sfondo delle intestazioni */
+  color: white; /* Colore del testo delle intestazioni */
 }
 
+tbody tr:nth-child(even) {
+  background-color: #f2f2f2; /* Colore di sfondo delle righe pari */
+}
+
+tbody tr:hover {
+  background-color: #ddd; /* Colore di sfondo al passaggio del mouse sulle righe */
+}
+
+td:hover, th:hover {
+  background-color: #c0c0c0; /* Colore di sfondo al passaggio del mouse sulle celle */
+}
+
+thead tr th[colspan] {
+  background-color: #0056b3; /* Colore di sfondo delle celle con colspan */
+}
+
+thead tr th[colspan]:not(:first-child) {
+  border-left: 1px solid #fff; /* Bordo tra le celle con colspan */
+}
 </style>
