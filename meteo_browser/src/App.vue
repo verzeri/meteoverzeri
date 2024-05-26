@@ -2,10 +2,10 @@
   <nav>
     <router-link to="/">Tabelle</router-link> |
     <router-link to="/about">Grafici</router-link> |
-    <router-link to="/tabregioni">Tabelle Regioni</router-link> |
+    <router-link to="/tabclass">Tabella Classifica</router-link> |
     <router-link to="">Grafici Regioni</router-link> |
-    <router-link to="">Tabella Classifica</router-link> |
-    <router-link to="">Grafico Classifica</router-link>
+    <router-link to="">Tabelle Regioni</router-link> |
+    <router-link to="/grafclass">Grafico Classifica</router-link>
   </nav>
   <router-view/>
 </template>
