@@ -3,7 +3,7 @@
     <table>
       <thead>
         <tr>
-          <th rowspan="2">COMUNI</th>
+          <th rowspan="2">REGIONI</th>
           <th colspan="16">TEMPERATURA MEDIA ANNUA (°C)</th>
         </tr>
         <tr>
@@ -12,7 +12,7 @@
       </thead>
       <tbody>
         <tr v-for="(row, rowIndex) in jsonData" :key="rowIndex">
-          <td>{{ row.city }}</td>
+          <td>{{ row.region }}</td>
           <td v-for="(temp, tempIndex) in row.temperatures" :key="'temp-val-' + tempIndex">{{ temp }}</td>
         </tr>
       </tbody>
@@ -21,7 +21,7 @@
     <table>
       <thead>
         <tr>
-          <th rowspan="2">COMUNI</th>
+          <th rowspan="2">REGIONI</th>
           <th colspan="16">PRECIPITAZIONE TOTALE ANNUA (mm)</th>
         </tr>
         <tr>
@@ -30,7 +30,7 @@
       </thead>
       <tbody>
         <tr v-for="(row, rowIndex) in jsonData" :key="rowIndex">
-          <td>{{ row.city }}</td>
+          <td>{{ row.region }}</td>
           <td v-for="(prec, precIndex) in row.precipitations" :key="'prec-val-' + precIndex">{{ prec }}</td>
         </tr>
       </tbody>
@@ -56,28 +56,44 @@ export default {
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        // Ottieni le città (celle A5:A113)
-        const cities = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'A5:A113' }).flat();
+        // Ottieni le città e le regioni (celle A5:B113)
+        const locations = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'A5:B113' });
 
-        // Ottieni gli anni (celle B4:Q4)
-        years.value = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'B4:Q4' })[0];
+        // Ottieni gli anni (celle C4:R4)
+        years.value = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'C4:R4' })[0];
 
-        // Ottieni i dati delle temperature (celle B5:Q113)
-        const temperatureDataArray = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'B5:Q113' });
+        // Ottieni i dati delle temperature (celle C5:R113)
+        const temperatureDataArray = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'C5:R113' });
 
-        // Ottieni i dati delle precipitazioni (celle R5:AG113)
-        const precipitationDataArray = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'R5:AG113' });
+        // Ottieni i dati delle precipitazioni (celle S5:AH113)
+        const precipitationDataArray = XLSX.utils.sheet_to_json(worksheet, { header: 1, range: 'S5:AH113' });
 
-        jsonData.value = cities.map((city, index) => ({
-          city,
-          temperatures: temperatureDataArray[index],
-          precipitations: precipitationDataArray[index]
+        // Raggruppa i dati per regione
+        const regionData = {};
+
+        locations.forEach(([city, region], index) => {
+          if (!regionData[region]) {
+            regionData[region] = { temperatures: Array(years.value.length).fill(0), precipitations: Array(years.value.length).fill(0), count: 0 };
+          }
+          temperatureDataArray[index].forEach((temp, tempIndex) => {
+            regionData[region].temperatures[tempIndex] += temp;
+          });
+          precipitationDataArray[index].forEach((prec, precIndex) => {
+            regionData[region].precipitations[precIndex] += prec;
+          });
+          regionData[region].count += 1;
+        });
+
+        // Calcola la media delle temperature e delle precipitazioni per regione
+        jsonData.value = Object.keys(regionData).map(region => ({
+          region,
+          temperatures: regionData[region].temperatures.map(temp => (temp / regionData[region].count).toFixed(2)),
+          precipitations: regionData[region].precipitations.map(prec => (prec / regionData[region].count).toFixed(2))
         }));
 
-        console.log('Città:', cities);  // Log delle città
-        console.log('Anni:', years.value);  // Log degli anni
-        console.log('Dati delle temperature:', jsonData.value);  // Log dei dati delle temperature
-        console.log('Dati delle precipitazioni:', jsonData.value);  // Log dei dati delle precipitazioni
+        console.log('Regioni:', Object.keys(regionData));  // Log delle regioni
+        console.log('Dati delle temperature per regione:', jsonData.value.map(data => data.temperatures));  // Log dei dati delle temperature per regione
+        console.log('Dati delle precipitazioni per regione:', jsonData.value.map(data => data.precipitations));  // Log dei dati delle precipitazioni per regione
       } catch (error) {
         console.error('Error loading Excel file:', error);
       }
@@ -135,4 +151,3 @@ thead tr th[colspan]:not(:first-child) {
   border-left: 1px solid #fff; /* Bordo tra le celle con colspan */
 }
 </style>
-
