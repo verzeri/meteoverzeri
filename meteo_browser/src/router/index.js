@@ -24,6 +24,17 @@ const routes = [
     path: '/grafclass',
     name: 'grafclass',
     component: () => import(/* webpackChunkName: "tabregioni" */ '../views/grafclass.vue')
+  },
+  {
+    path: '/tabregione',
+    name: 'tabregione',
+    component: () => import(/* webpackChunkName: "tabregioni" */ '../views/tabregione.vue')
+  }
+  ,
+  {
+    path: '/grafregione',
+    name: 'grafregione',
+    component: () => import(/* webpackChunkName: "tabregioni" */ '../views/grafregione.vue')
   }
 ]
 
