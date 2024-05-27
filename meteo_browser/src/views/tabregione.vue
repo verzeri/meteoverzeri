@@ -143,7 +143,6 @@ export default {
           'Matera': 'Basilicata',
           'Campobasso': 'Molise',
           'Lamezia Terme': 'Calabria',
-          'Trapani': 'Sicilia',
           'Massa': 'Toscana',
           'Ragusa': 'Sicilia',
           'Viterbo': 'Lazio',
